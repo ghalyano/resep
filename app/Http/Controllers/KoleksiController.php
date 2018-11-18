@@ -12,10 +12,43 @@ class KoleksiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function koleksi(Request $r)
     {
-        //
+         return Koleksi::all();
     }
+
+    public function hapus_koleksi(Request $r)
+    {
+        $koleksi= ListKoleksi::findOrFail($r->id_koleksi);
+        $koleksi->delete();
+        return 'sukses';
+
+    }
+
+    public function hapus_dari_koleksi(Request $r)
+    {
+        $koleksi= Koleksi::findOrFail($r->id_koleksi);
+        $koleksi->delete();
+        return 'sukses';
+
+    }
+
+    public function tambah_koleksi(Request $r)
+    {
+        $koleksi=new ListKoleksi;
+        $koleksi->nama_koleksi = $r->nama_koleksi;
+        $koleksi->username = $r->username;
+        $koleksi->save();
+    }
+
+    public function tambah_ke_koleksi (Request $r)
+    {
+        $koleksi=new Koleksi;
+        $koleksi->id_resep=$r->id_resep;
+        $koleksi->id_list=$r->id_list;
+        $koleksi->save();
+    }
+
 
     /**
      * Show the form for creating a new resource.

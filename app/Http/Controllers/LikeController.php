@@ -12,9 +12,20 @@ class LikeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function tambah_like(Request $r)
     {
-        //
+        $like=new Like;
+        $like->id_resep=$r->id_resep;
+        $like->username=$r->username;
+        $like->save();
+
+    }
+
+    public function hapus_like(Request $r)
+    {
+        $like= Like::findOrFail($r->id_like);
+        $like->delete();
+        return 'sukses';
     }
 
     /**

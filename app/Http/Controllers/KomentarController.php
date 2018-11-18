@@ -12,9 +12,41 @@ class KomentarController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function tambah_komentar(Request $r)
     {
-        //
+        $komentar= new Komentar;
+        $komentar->isi=$r->isi;
+        $komentar->id_resep=$r->id_resep;
+        $komentar->username=$r->username;
+        $komentar->tgl=$r->tgl;
+        $komentar->save();
+        
+    }
+
+    public function delete_komentar(Request $r)
+    {
+        $komentar= komentar::findOrFail($r->id_komentar);
+        $komentar->delete();
+        return 'sukses';
+
+    }
+
+    public function update_komentar(Request $r)
+    {
+        $komentar= Komentar::findOrFail($r->id_komentar);
+        $komentar->isi=$r->isi;
+        $komentar->id_resep=$r->id_resep;
+        $komentar->username=$r->username;
+        $komentar->tgl=$r->tgl;
+        $komentar->save();
+
+    }
+
+    public function ambil_komentar(Request $r)
+    {
+        $komentar= Komentar::findOrFail($r->id_komentar);
+        return $komentar;
+
     }
 
     /**

@@ -12,9 +12,9 @@ class KategoriController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function kategori(Request $r)
     {
-        //
+       return Kategori::all();
     }
 
     /**

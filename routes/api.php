@@ -34,6 +34,7 @@ Route::post('detail_resep', 'ResepController@detail_resep');
 Route::post('profil', 'UsersController@profil');
 Route::post('update_profil', 'UsersController@update_profil');
 Route::post('tambah_kometar', 'KomentarController@tambah_komentar');
+Route::post('ambil_kometar', 'KomentarController@ambil_komentar');
 Route::post('delete_komentar', 'KomentarController@delete_komentar');
 Route::post('update_komentar', 'KomentarController@update_komtar');
 Route::post('tambah_like', 'LikeController@tambah_like');
