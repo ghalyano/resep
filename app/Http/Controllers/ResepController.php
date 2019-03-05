@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Resep;
 use Illuminate\Http\Request;
+use App\Kategori;
 
 class ResepController extends Controller
 {
@@ -14,12 +15,49 @@ class ResepController extends Controller
      */
     public function resep(Request $r)
     {
-        return Resep::all();
+        $resep = Resep::all();
+        $hasil = [];
+        foreach ($resep as $data) {
+            array_push($hasil, [
+                'id_resep'=> $data->id_resep,
+                'judul'=>$data->judul,
+                'foto'=>$data->foto,
+                'bahan'=>$data->bahan,
+                'langkah'=>$data->langkah,
+                'waktu_post'=>$data->waktu_post,
+                'kategori'=>$data->kategori->kategori,
+                'username'=>$data->username,
+                'nama'=>$data->user->nama,
+                'like'=>$data->like->count(),
+                'komentar'=>$data->komentar->count()
+            ]);
+        }
+
+        return response()->json($hasil);
+    }
+
+    public function detail_resep(Request $r)
+    {
+        $resep = Resep::find($r->id);
+        return response()->json([
+            'id_resep'=> $resep->id_resep,
+            'judul'=>$resep->judul,
+            'foto'=>$resep->foto,
+            'bahan'=>$resep->bahan,
+            'langkah'=>$resep->langkah,
+            'waktu_post'=>$resep->waktu_post,
+            'kategori'=>$resep->kategori->kategori,
+            'username'=>$resep->username,
+            'nama'=>$resep->user->nama,
+            'like'=>$resep->like->count(),
+            'komentar'=>$resep->komentar->count(),
+            'is_liked'=>$resep->isLiked($r->username)
+        ]);
     }
 
     public function cari_resep(Request $r)
     {
-        $resep= new Resep::where('judul', 'LIKE', '%'.$r->query.'%')->get();
+        $resep= Resep::where('judul', 'LIKE', '%'.$r->query.'%')->get();
         return $resep;
     }
 
@@ -45,14 +83,18 @@ class ResepController extends Controller
     {
         $resep= Resep::findOrFail($r->id_resep);
         $resep->delete();
-        return 'sukses';
+        return response()->json([
+            'pesan' => 'sukses'  
+        ]);
     }
 
     public function buat_resep(Request $r)
     {
         //validasi input
         if(empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
-            return 'judul, foto, bahan, dan langkah wajib diisi';
+            return response()->json([
+                'pesan' => 'Judul, Foto, Bahan dan Langkah wajib diisi'  
+            ]);
         }
 
         $resep= new Resep;
@@ -65,13 +107,9 @@ class ResepController extends Controller
         $resep->username=$r->username;
         $resep->link_video=$r->link_video;
         $resep->save();
-        return 'sukses';
-    }
-
-    public function detail_resep(Request $r)
-    {
-        $resep= Resep::findOrFail($r->id_resep);
-        return $resep;
+        return response()->json([
+            'pesan' => 'sukses'  
+        ]);
     }
 
     /**

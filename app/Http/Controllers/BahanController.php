@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Kategori;
+use App\Bahan;
 use Illuminate\Http\Request;
 
-class KategoriController extends Controller
+class BahanController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function kategori()
+    public function index()
     {
-       return Kategori::all();
+        //
     }
 
     /**
@@ -41,10 +41,10 @@ class KategoriController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Kategori  $kategori
+     * @param  \App\Bahan  $bahan
      * @return \Illuminate\Http\Response
      */
-    public function show(Kategori $kategori)
+    public function show(Bahan $bahan)
     {
         //
     }
@@ -52,10 +52,10 @@ class KategoriController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Kategori  $kategori
+     * @param  \App\Bahan  $bahan
      * @return \Illuminate\Http\Response
      */
-    public function edit(Kategori $kategori)
+    public function edit(Bahan $bahan)
     {
         //
     }
@@ -64,10 +64,10 @@ class KategoriController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Kategori  $kategori
+     * @param  \App\Bahan  $bahan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kategori $kategori)
+    public function update(Request $request, Bahan $bahan)
     {
         //
     }
@@ -75,10 +75,10 @@ class KategoriController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Kategori  $kategori
+     * @param  \App\Bahan  $bahan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Kategori $kategori)
+    public function destroy(Bahan $bahan)
     {
         //
     }

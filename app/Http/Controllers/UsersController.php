@@ -21,18 +21,21 @@ class UsersController extends Controller
      */
     public function login(Request $r)
     {
-        /*echo Hash::make('admin');
-        $users=new Users;*/
         $credentials = $r->only('username', 'password');
 
         if (Auth::attempt($credentials)) 
         {
             // Authentication passed...
-            return 'sukses';
+            return response()->json([
+                'pesan' => 'sukses',
+                'data' => Auth::user()
+            ]);
         } 
         else 
         {
-            return 'gagal';
+            return response()->json([
+                'pesan' => 'gagal'  
+            ]);
         }
     }
 
@@ -42,18 +45,24 @@ class UsersController extends Controller
         $user_ketemu=Users::where('username',$r->username)->get();
         if (!$user_ketemu->isEmpty())
         {
-            return 'username sudah digunakan';
+             return response()->json([
+                'pesan' => 'Username sudah digunakan'  
+            ]);
         }
 
         $email_ketemu=Users::where('email', $r->email)->get();
         if (!$email_ketemu->isEmpty())
         {
-            return 'email sudah digunakan';
+            return response()->json([
+                'pesan' => 'Email sudah digunakan'  
+            ]);
         }
 
         if (strlen($r->password) < 8)
         {
-            return 'password minimal 8 karakter';
+            return response()->json([
+                'pesan' => 'Password minimal 8 karakter'  
+            ]);
         }
 
         $user=new Users;
@@ -65,8 +74,31 @@ class UsersController extends Controller
         $user->foto=null;
         $user->bio=null;
         $user->save();
-        return 'sukses';
-        
+        return response()->json([
+            'pesan' => 'sukses'  
+        ]);
+    }
+
+    public function profil (Request $r)
+    {
+        $profil_saya = Users::where('username', $r->username)->first();
+        return response()->json($profil_saya);
+    }
+
+    public function update_profil(Request $r)
+    {
+        $user = User::findOrFail($r->username);
+        $user->username=$r->username;
+        $user->nama=$r->nama;
+        $user->email=$r->email;
+        $user->password=Hash::make($r->password);
+        $user->foto=null;
+        $user->bio=null;
+        $user->save();
+        return response()->json([
+            'pesan' => 'sukses'  
+        ]);
+
     }
 
     /**

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Like extends Model
 {
     protected $table="like";
-    protected $primaryKey = "id_like"
+    protected $primaryKey = "id_like";
     public $timestamps = false;
 
     function resep (){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Komentar;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class KomentarController extends Controller
 {
@@ -12,22 +13,26 @@ class KomentarController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function tambah_komentar(Request $r)
+    public function simpan_komentar(Request $r)
     {
         $komentar= new Komentar;
         $komentar->isi=$r->isi;
         $komentar->id_resep=$r->id_resep;
         $komentar->username=$r->username;
-        $komentar->tgl=$r->tgl;
+        $komentar->tgl=Carbon::now();
         $komentar->save();
-        
+        return response()->json([
+            'pesan' => 'sukses'  
+        ]);
     }
 
     public function delete_komentar(Request $r)
     {
         $komentar= komentar::findOrFail($r->id_komentar);
         $komentar->delete();
-        return 'sukses';
+        return response()->json([
+            'pesan' => 'sukses'  
+        ]);
 
     }
 
@@ -39,14 +44,16 @@ class KomentarController extends Controller
         $komentar->username=$r->username;
         $komentar->tgl=$r->tgl;
         $komentar->save();
+        return response()->json([
+            'pesan' => 'sukses'  
+        ]);
 
     }
 
     public function ambil_komentar(Request $r)
     {
-        $komentar= Komentar::findOrFail($r->id_komentar);
+        $komentar= Komentar::where(['id_resep'=>$r->id_resep])->get();
         return $komentar;
-
     }
 
     /**
