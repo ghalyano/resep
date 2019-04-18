@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Users extends Model
 {
     protected $table="users";
-    // protected $primaryKey = "username";
+    protected $primaryKey = "username";
     public $timestamps = false;
+    public $incrementing = false;
+    public $hidden = ['password'];
 
     function resep() 
     {
+        // return Resep::where('username', $this->username)->get();
         return $this->hasMany('App\Resep', 'username', 'username');
     } 
 

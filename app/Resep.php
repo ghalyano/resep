@@ -12,12 +12,12 @@ class Resep extends Model
 
     function user() 
     {
-    	return $this->belongsTo('App\Users', 'username', 'username');
+        return $this->belongsTo('App\Users', 'username', 'username');
     }
 
     function kategori()
     {
-    	return $this->belongsTo('App\Kategori', 'id_kategori', 'id_kategori');
+        return $this->belongsTo('App\Kategori', 'id_kategori', 'id_kategori');
     }
 
     function like() 
