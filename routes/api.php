@@ -33,6 +33,7 @@ Route::post('tambah_koleksi', 'KoleksiController@tambah_koleksi');
 Route::post('tambah_ke_koleksi', 'KoleksiController@tambah_ke_koleksi');
 Route::post('detail_resep', 'ResepController@detail_resep');
 Route::post('profil', 'UsersController@profil');
+Route::post('ganti_password', 'UsersController@ganti_password');
 Route::post('update_profil', 'UsersController@update_profil');
 Route::post('tambah_kometar', 'KomentarController@tambah_komentar');
 Route::post('komentar', 'KomentarController@ambil_komentar');
@@ -40,6 +41,3 @@ Route::post('simpan_komentar', 'KomentarController@simpan_komentar');
 Route::post('delete_komentar', 'KomentarController@delete_komentar');
 Route::post('like', 'LikeController@like');
 Route::get('kategori', 'KategoriController@kategori');
-Route::get('test', function() {
-	return 'ddd';
-});

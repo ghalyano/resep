@@ -112,70 +112,12 @@ class ResepController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function create()
+    public function resep_saya(Request $r) 
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Resep  $resep
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Resep $resep)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Resep  $resep
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Resep $resep)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Resep  $resep
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Resep $resep)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Resep  $resep
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Resep $resep)
-    {
-        //
+        $reseps = Resep::where('username', $r->username)->get();
+        return response()->json([
+            'status'=>'sukses',
+            'data'=>$reseps
+        ]);
     }
 }

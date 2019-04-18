@@ -26,9 +26,13 @@ class UsersController extends Controller
         if (Auth::attempt($credentials)) 
         {
             // Authentication passed...
+            $user_info = Users::find($r->username);
+            $user_info->token_login = str_random(32);
+            $user_info->save();
+
             return response()->json([
                 'pesan' => 'sukses',
-                'data' => Auth::user()
+                'data' => $user_info
             ]);
         } 
         else 
@@ -45,7 +49,7 @@ class UsersController extends Controller
         $user_ketemu=Users::where('username',$r->username)->get();
         if (!$user_ketemu->isEmpty())
         {
-             return response()->json([
+            return response()->json([
                 'pesan' => 'Username sudah digunakan'  
             ]);
         }
@@ -73,32 +77,59 @@ class UsersController extends Controller
         $user->password=Hash::make($r->password);
         $user->foto=null;
         $user->bio=null;
+        $user->token_login=str_random(32);
         $user->save();
         return response()->json([
-            'pesan' => 'sukses'  
+            'pesan' => 'sukses',
+            'data' => $user
         ]);
     }
 
     public function profil (Request $r)
     {
-        $profil_saya = Users::where('username', $r->username)->first();
-        return response()->json($profil_saya);
+        $profil_saya = Users::where('username', $r->username)->with(['resep' => function($query) {
+            $query->with('kategori');
+            $query->withCount(['komentar', 'like']);
+        }])->first();
+        // $reseps = $profil_saya->resep;
+        return response()->json([
+            'pesan' => 'sukses',
+            'data' => $profil_saya,
+            
+        ]);
     }
 
     public function update_profil(Request $r)
     {
-        $user = User::findOrFail($r->username);
-        $user->username=$r->username;
+        $user = Users::where('token_login', $r->token_login)->first();
+        // $user->username=$r->username;
         $user->nama=$r->nama;
         $user->email=$r->email;
-        $user->password=Hash::make($r->password);
-        $user->foto=null;
-        $user->bio=null;
-        $user->save();
-        return response()->json([
-            'pesan' => 'sukses'  
-        ]);
+        // $user->password=Hash::make($r->password);
+        // TODO set set change picture later
+        // $user->foto=null;
+        $user->bio=$r->bio;
+        
+        if($user->save()) 
+        {
+            return 'sukses';
+        } 
+        else 
+        {
+            return 'gagal';
+        }
+    }
 
+    public function ganti_password(Request $r) {
+        $user = Users::where('token_login', $r->token_login)->first();
+        $pass_sama = Hash::check($r->password_lama, $user->password);
+        if($pass_sama) {
+            $user->password = Hash::make($r->password_baru);
+            $user->save();
+            return "sukses";
+        } else {
+            return "password berbeda";
+        }
     }
 
     /**
