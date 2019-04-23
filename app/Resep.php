@@ -8,6 +8,7 @@ class Resep extends Model
 {
     protected $table="tbl_resep";
     protected $primaryKey = "id_resep";
+    protected $dates = ['waktu_post'];
     public $timestamps = false;
 
     function user() 

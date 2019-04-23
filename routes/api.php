@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'UsersController@login');
 Route::post('register', 'UsersController@register');
 Route::get('resep', 'ResepController@resep');
+Route::post('detail_resep', 'ResepController@detail_resep');
 Route::post('cari_resep', 'ResepController@cari_resep');
 Route::post('update_resep', 'ResepController@update_resep');
 Route::post('delete_resep', 'ResepController@delete_resep');
@@ -31,7 +32,6 @@ Route::post('hapus_koleksi', 'KoleksiController@hapus_koleksi');
 Route::post('hapus_dari_koleksi', 'KoleksiController@hapus_dari_koleksi');
 Route::post('tambah_koleksi', 'KoleksiController@tambah_koleksi');
 Route::post('tambah_ke_koleksi', 'KoleksiController@tambah_ke_koleksi');
-Route::post('detail_resep', 'ResepController@detail_resep');
 Route::post('profil', 'UsersController@profil');
 Route::post('ganti_password', 'UsersController@ganti_password');
 Route::post('update_profil', 'UsersController@update_profil');

@@ -39,20 +39,35 @@ class ResepController extends Controller
     public function detail_resep(Request $r)
     {
         $resep = Resep::find($r->id);
-        return response()->json([
-            'id_resep'=> $resep->id_resep,
-            'judul'=>$resep->judul,
-            'foto'=>$resep->foto,
-            'bahan'=>$resep->bahan,
-            'langkah'=>$resep->langkah,
-            'waktu_post'=>$resep->waktu_post,
-            'kategori'=>$resep->kategori->kategori,
-            'username'=>$resep->username,
-            'nama'=>$resep->user->nama,
-            'like'=>$resep->like->count(),
-            'komentar'=>$resep->komentar->count(),
-            'is_liked'=>$resep->isLiked($r->username)
-        ]);
+        if(is_null($resep)) {
+            return response()->json([
+                'pesan' => 'gagal',
+                'data' => 'resep tidak ditemukan'
+            ]);
+        }
+        
+        \Carbon\Carbon::setLocale('id');
+
+        return response()->json(
+            [
+                'pesan' => 'sukses',
+                'data' => [
+                    'id_resep' => $resep->id_resep,
+                    'judul' => $resep->judul,
+                    'foto' => $resep->foto,
+                    'bahan' => $resep->bahan,
+                    'langkah' => $resep->langkah,
+                    'waktu_post' => $resep->waktu_post->format('d M Y H:i'),
+                    'waktu_post_baca' => $resep->waktu_post->diffForHumans(),
+                    'kategori' => $resep->kategori->kategori,
+                    'username' => $resep->username,
+                    'nama' => $resep->user->nama,
+                    'like' => $resep->like->count(),
+                    'komentar' => $resep->komentar->count(),
+                    'is_liked' => $resep->isLiked($r->username)
+                ]
+            ]
+        );
     }
 
     public function cari_resep(Request $r)
