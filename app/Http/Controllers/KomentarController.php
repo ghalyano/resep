@@ -22,7 +22,8 @@ class KomentarController extends Controller
         $komentar->tgl=Carbon::now();
         $komentar->save();
         return response()->json([
-            'pesan' => 'sukses'  
+            'pesan' => 'sukses',
+            'data' => $komentar
         ]);
     }
 

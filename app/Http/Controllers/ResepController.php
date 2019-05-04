@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Resep;
 use Illuminate\Http\Request;
 use App\Kategori;
+use Carbon\Carbon;
 
 class ResepController extends Controller
 {
@@ -15,21 +16,29 @@ class ResepController extends Controller
      */
     public function resep(Request $r)
     {
-        $resep = Resep::all();
+        // set format ke bhs indonesia
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
+
+        $resep = Resep::orderBy('waktu_post')->limit(10)->get();
         $hasil = [];
+        $sekarang = Carbon::now();
+        
         foreach ($resep as $data) {
+            $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ? 
+                $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
             array_push($hasil, [
-                'id_resep'=> $data->id_resep,
-                'judul'=>$data->judul,
-                'foto'=>$data->foto,
-                'bahan'=>$data->bahan,
-                'langkah'=>$data->langkah,
-                'waktu_post'=>$data->waktu_post,
-                'kategori'=>$data->kategori->kategori,
-                'username'=>$data->username,
-                'nama'=>$data->user->nama,
-                'like'=>$data->like->count(),
-                'komentar'=>$data->komentar->count()
+                'id_resep' => $data->id_resep,
+                'judul' => $data->judul,
+                'foto' => $data->foto,
+                'bahan' => $data->bahan,
+                'langkah' => $data->langkah,
+                'waktu_post' => $waktu_post,
+                'kategori' => $data->kategori->kategori,
+                'username' => $data->username,
+                'nama' => $data->user->nama,
+                'like' => $data->like->count(),
+                'komentar' => $data->komentar->count()
             ]);
         }
 
@@ -46,6 +55,7 @@ class ResepController extends Controller
             ]);
         }
         
+        // set format ke bhs indonesia
         \Carbon\Carbon::setLocale('id');
 
         return response()->json(
@@ -57,6 +67,7 @@ class ResepController extends Controller
                     'foto' => $resep->foto,
                     'bahan' => $resep->bahan,
                     'langkah' => $resep->langkah,
+                    'list_komentar' => $resep->komentar,
                     'waktu_post' => $resep->waktu_post->format('d M Y H:i'),
                     'waktu_post_baca' => $resep->waktu_post->diffForHumans(),
                     'kategori' => $resep->kategori->kategori,
