@@ -29,13 +29,21 @@ class KomentarController extends Controller
 
     public function delete_komentar(Request $r)
     {
-        $komentar = komentar::where([
+        $komentar = Komentar::where([
             'id_komentar' => $r->id_komentar,
             'username' => $r->username
         ])->first();
+
+        if (is_null($komentar)) {
+            return response()->json([
+                'status' => 'gagal',
+                'pesan' => 'id komentar untuk user ini tidak ditemukan'
+            ]);
+        }
+
         $komentar->delete();
         return response()->json([
-            'pesan' => 'sukses'
+            'status' => 'sukses'
         ]);
     }
 
