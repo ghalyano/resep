@@ -39,19 +39,6 @@ class KomentarController extends Controller
         ]);
     }
 
-    public function update_komentar(Request $r)
-    {
-        $komentar = Komentar::findOrFail($r->id_komentar);
-        $komentar->isi = $r->isi;
-        $komentar->id_resep = $r->id_resep;
-        $komentar->username = $r->username;
-        $komentar->tgl = $r->tgl;
-        $komentar->save();
-        return response()->json([
-            'pesan' => 'sukses'
-        ]);
-    }
-
     public function ambil_komentar(Request $r)
     {
         $komentar = Komentar::where(['id_resep' => $r->id_resep])->get();
