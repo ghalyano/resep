@@ -15,11 +15,11 @@ class KomentarController extends Controller
      */
     public function simpan_komentar(Request $r)
     {
-        $komentar= new Komentar;
-        $komentar->isi=$r->isi;
-        $komentar->id_resep=$r->id_resep;
-        $komentar->username=$r->username;
-        $komentar->tgl=Carbon::now();
+        $komentar = new Komentar;
+        $komentar->isi = $r->isi;
+        $komentar->id_resep = $r->id_resep;
+        $komentar->username = $r->username;
+        $komentar->tgl = Carbon::now();
         $komentar->save();
         return response()->json([
             'pesan' => 'sukses',
@@ -29,31 +29,32 @@ class KomentarController extends Controller
 
     public function delete_komentar(Request $r)
     {
-        $komentar= komentar::findOrFail($r->id_komentar);
+        $komentar = komentar::where([
+            'id_komentar' => $r->id_komentar,
+            'username' => $r->username
+        ])->first();
         $komentar->delete();
         return response()->json([
-            'pesan' => 'sukses'  
+            'pesan' => 'sukses'
         ]);
-
     }
 
     public function update_komentar(Request $r)
     {
-        $komentar= Komentar::findOrFail($r->id_komentar);
-        $komentar->isi=$r->isi;
-        $komentar->id_resep=$r->id_resep;
-        $komentar->username=$r->username;
-        $komentar->tgl=$r->tgl;
+        $komentar = Komentar::findOrFail($r->id_komentar);
+        $komentar->isi = $r->isi;
+        $komentar->id_resep = $r->id_resep;
+        $komentar->username = $r->username;
+        $komentar->tgl = $r->tgl;
         $komentar->save();
         return response()->json([
-            'pesan' => 'sukses'  
+            'pesan' => 'sukses'
         ]);
-
     }
 
     public function ambil_komentar(Request $r)
     {
-        $komentar= Komentar::where(['id_resep'=>$r->id_resep])->get();
+        $komentar = Komentar::where(['id_resep' => $r->id_resep])->get();
         return $komentar;
     }
 
@@ -75,7 +76,7 @@ class KomentarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // TODO bayu
     }
 
     /**

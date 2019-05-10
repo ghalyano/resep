@@ -16,7 +16,8 @@ class KoleksiController extends Controller
      */
     public function koleksi(Request $r)
     {
-        $user = User::where('token_login', $r->token)->first();
+        // $user = User::where('token_login', $r->token)->first();
+        $user = User::where('username', $r->username)->first();
         if (!is_null($user)) {
             return response()->json([
                 'pesan' => 'sukses',
@@ -121,7 +122,7 @@ class KoleksiController extends Controller
      */
     public function show(Koleksi $koleksi)
     {
-        //
+        // FIXME bayudd
     }
 
     /**
