@@ -23,8 +23,7 @@ class UsersController extends Controller
     {
         $credentials = $r->only('username', 'password');
 
-        if (Auth::attempt($credentials)) 
-        {
+        if (Auth::attempt($credentials)) {
             // Authentication passed...
             $user_info = Users::find($r->username);
             $user_info->token_login = str_random(32);
@@ -34,11 +33,9 @@ class UsersController extends Controller
                 'pesan' => 'sukses',
                 'data' => $user_info
             ]);
-        } 
-        else 
-        {
+        } else {
             return response()->json([
-                'pesan' => 'gagal'  
+                'pesan' => 'gagal'
             ]);
         }
     }
@@ -46,38 +43,35 @@ class UsersController extends Controller
     public function register(Request $r)
     {
         // return 'dsdsd';
-        $user_ketemu=Users::where('username',$r->username)->get();
-        if (!$user_ketemu->isEmpty())
-        {
+        $user_ketemu = Users::where('username', $r->username)->get();
+        if (!$user_ketemu->isEmpty()) {
             return response()->json([
-                'pesan' => 'Username sudah digunakan'  
+                'pesan' => 'Username sudah digunakan'
             ]);
         }
 
-        $email_ketemu=Users::where('email', $r->email)->get();
-        if (!$email_ketemu->isEmpty())
-        {
+        $email_ketemu = Users::where('email', $r->email)->get();
+        if (!$email_ketemu->isEmpty()) {
             return response()->json([
-                'pesan' => 'Email sudah digunakan'  
+                'pesan' => 'Email sudah digunakan'
             ]);
         }
 
-        if (strlen($r->password) < 8)
-        {
+        if (strlen($r->password) < 8) {
             return response()->json([
-                'pesan' => 'Password minimal 8 karakter'  
+                'pesan' => 'Password minimal 8 karakter'
             ]);
         }
 
-        $user=new Users;
+        $user = new Users;
         // $user = User::findOrFail()
-        $user->username=$r->username;
-        $user->nama=$r->nama;
-        $user->email=$r->email;
-        $user->password=Hash::make($r->password);
-        $user->foto=null;
-        $user->bio=null;
-        $user->token_login=str_random(32);
+        $user->username = $r->username;
+        $user->nama = $r->nama;
+        $user->email = $r->email;
+        $user->password = Hash::make($r->password);
+        $user->foto = null;
+        $user->bio = null;
+        $user->token_login = str_random(32);
         $user->save();
         return response()->json([
             'pesan' => 'sukses',
@@ -85,9 +79,9 @@ class UsersController extends Controller
         ]);
     }
 
-    public function profil (Request $r)
+    public function profil(Request $r)
     {
-        $profil_saya = Users::where('username', $r->username)->with(['resep' => function($query) {
+        $profil_saya = Users::where('username', $r->username)->with(['resep' => function ($query) {
             $query->with('kategori');
             $query->withCount(['komentar', 'like']);
         }])->first();
@@ -95,7 +89,7 @@ class UsersController extends Controller
         return response()->json([
             'pesan' => 'sukses',
             'data' => $profil_saya,
-            
+
         ]);
     }
 
@@ -103,99 +97,30 @@ class UsersController extends Controller
     {
         $user = Users::where('token_login', $r->token_login)->first();
         // $user->username=$r->username;
-        $user->nama=$r->nama;
-        $user->email=$r->email;
+        $user->nama = $r->nama;
+        $user->email = $r->email;
         // $user->password=Hash::make($r->password);
         // TODO set set change picture later
         // $user->foto=null;
-        $user->bio=$r->bio;
-        
-        if($user->save()) 
-        {
+        $user->bio = $r->bio;
+
+        if ($user->save()) {
             return 'sukses';
-        } 
-        else 
-        {
+        } else {
             return 'gagal';
         }
     }
 
-    public function ganti_password(Request $r) {
+    public function ganti_password(Request $r)
+    {
         $user = Users::where('token_login', $r->token_login)->first();
         $pass_sama = Hash::check($r->password_lama, $user->password);
-        if($pass_sama) {
+        if ($pass_sama) {
             $user->password = Hash::make($r->password_baru);
             $user->save();
             return "sukses";
         } else {
             return "password berbeda";
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Users $users)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Users $users)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Users $users)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Users $users)
-    {
-        //
     }
 }
