@@ -35,20 +35,20 @@ class KoleksiController extends Controller
         $koleksi_resep = Koleksi::where('id_list', $r->id_list)->get();
         $data = [];
         foreach ($koleksi_resep as $resep) {
-                array_push($data, [
-                    'id_resep' => $resep->resep->id_resep,
-                    'judul' => $resep->resep->judul,
-                    'foto' => $resep->resep->foto,
-                    'bahan' => $resep->resep->bahan,
-                    'langkah' => $resep->resep->langkah,
-                    'waktu_post' => $resep->resep->waktu_post,
-                    'kategori' => $resep->resep->kategori->kategori,
-                    'username' => $resep->resep->username,
-                    'nama' => $resep->resep->user->nama,
-                    'like' => $resep->resep->like->count(),
-                    'komentar' => $resep->resep->komentar->count()
-                ]);
-            }
+            array_push($data, [
+                'id_resep' => $resep->resep->id_resep,
+                'judul' => $resep->resep->judul,
+                'foto' => $resep->resep->foto,
+                'bahan' => $resep->resep->bahan,
+                'langkah' => $resep->resep->langkah,
+                'waktu_post' => $resep->resep->waktu_post,
+                'kategori' => $resep->resep->kategori->kategori,
+                'username' => $resep->resep->username,
+                'nama' => $resep->resep->user->nama,
+                'like' => $resep->resep->like->count(),
+                'komentar' => $resep->resep->komentar->count()
+            ]);
+        }
         return $data;
     }
 
@@ -90,72 +90,5 @@ class KoleksiController extends Controller
         return response()->json([
             'pesan' => 'sukses'
         ]);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Koleksi  $koleksi
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Koleksi $koleksi)
-    {
-        // FIXME bayudd
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Koleksi  $koleksi
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Koleksi $koleksi)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Koleksi  $koleksi
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Koleksi $koleksi)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Koleksi  $koleksi
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Koleksi $koleksi)
-    {
-        //
     }
 }
