@@ -6,6 +6,7 @@ use App\Resep;
 use Illuminate\Http\Request;
 use App\Kategori;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ResepController extends Controller
 {
@@ -23,9 +24,9 @@ class ResepController extends Controller
         $resep = Resep::orderBy('waktu_post')->limit(10)->get();
         $hasil = [];
         $sekarang = Carbon::now();
-        
+
         foreach ($resep as $data) {
-            $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ? 
+            $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ?
                 $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
             array_push($hasil, [
                 'id_resep' => $data->id_resep,
@@ -48,13 +49,13 @@ class ResepController extends Controller
     public function detail_resep(Request $r)
     {
         $resep = Resep::find($r->id);
-        if(is_null($resep)) {
+        if (is_null($resep)) {
             return response()->json([
                 'pesan' => 'gagal',
                 'data' => 'resep tidak ditemukan'
             ]);
         }
-        
+
         // set format ke bhs indonesia
         \Carbon\Carbon::setLocale('id');
 
@@ -83,67 +84,72 @@ class ResepController extends Controller
 
     public function cari_resep(Request $r)
     {
-        $resep= Resep::where('judul', 'LIKE', '%'.$r->query.'%')->get();
+        $resep = Resep::where('judul', 'LIKE', '%' . $r->query . '%')->get();
         return $resep;
     }
 
-    public function update_resep (Request $r)
+    public function update_resep(Request $r)
     {
         //validasi input
-        if(empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
+        if (empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
             return 'judul, foto, bahan, dan langkah wajib diisi';
         }
-        $resep= Resep::findOrFail($r->id_resep);
-        $resep->judul=$r->judul;
-        $resep->foto=$r->foto;
-        $resep->bahan=$r->bahan;
-        $resep->langkah=$r->langkah;
-        $resep->waktu_post=$r->waktu_post;
-        $resep->id_kategori=$r->id_kategori;
-        $resep->username=$r->username;
-        $resep->link_video=$r->link_video;
+        $resep = Resep::findOrFail($r->id_resep);
+        $resep->judul = $r->judul;
+        $resep->foto = $r->foto;
+        $resep->bahan = $r->bahan;
+        $resep->langkah = $r->langkah;
+        $resep->waktu_post = $r->waktu_post;
+        $resep->id_kategori = $r->id_kategori;
+        $resep->username = $r->username;
+        $resep->link_video = $r->link_video;
         $resep->save();
     }
 
     public function delete_resep(Request $r)
     {
-        $resep= Resep::findOrFail($r->id_resep);
+        $resep = Resep::findOrFail($r->id_resep);
         $resep->delete();
         return response()->json([
-            'pesan' => 'sukses'  
+            'pesan' => 'sukses'
         ]);
     }
 
     public function buat_resep(Request $r)
     {
         //validasi input
-        if(empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
+        if (empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
             return response()->json([
-                'pesan' => 'Judul, Foto, Bahan dan Langkah wajib diisi'  
+                'pesan' => 'gagal',
+                'status' => 'Judul, Foto, Bahan dan Langkah wajib diisi'
             ]);
         }
 
-        $resep= new Resep;
-        $resep->judul=$r->judul;
-        $resep->foto=$r->foto;
-        $resep->bahan=$r->bahan;
-        $resep->langkah=$r->langkah;
-        $resep->waktu_post=$r->waktu_post;
-        $resep->id_kategori=$r->id_kategori;
-        $resep->username=$r->username;
-        $resep->link_video=$r->link_video;
+        /* Log::info("PESAN DARI MOBILE>>" . join(", ", $r->bahan)); // log input ke laravel.log
+        exit(); */
+
+        $resep = new Resep;
+        $resep->judul = $r->judul;
+        $resep->foto = $r->foto;
+        // $resep->bahan = $r->bahan; // bahan di simpan di  table sendiri
+        // $resep->langkah = $r->langkah; // langkah jg disimpan di table sendiri
+        // todo handel upload foto jg belum
+        $resep->waktu_post = Carbon::now();
+        $resep->id_kategori = $r->id_kategori;
+        $resep->username = $r->username;
+        $resep->link_video = $r->link_video;
         $resep->save();
         return response()->json([
-            'pesan' => 'sukses'  
+            'pesan' => 'sukses'
         ]);
     }
 
-    public function resep_saya(Request $r) 
+    public function resep_saya(Request $r)
     {
         $reseps = Resep::where('username', $r->username)->get();
         return response()->json([
-            'status'=>'sukses',
-            'data'=>$reseps
+            'status' => 'sukses',
+            'data' => $reseps
         ]);
     }
 }
