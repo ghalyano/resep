@@ -130,14 +130,14 @@ class ResepController extends Controller
 
         $resep = new Resep;
         $resep->judul = $r->judul;
-        $resep->foto = $r->foto;
+        $resep->foto = $r->foto == null ? "" : $r->foto;
         // $resep->bahan = $r->bahan; // bahan di simpan di  table sendiri
         // $resep->langkah = $r->langkah; // langkah jg disimpan di table sendiri
         // todo handel upload foto jg belum
         $resep->waktu_post = Carbon::now();
         $resep->id_kategori = $r->id_kategori;
         $resep->username = $r->username;
-        $resep->link_video = $r->link_video;
+        $resep->link_video = $r->link_video == null ? "" : $r->link_video;
         $resep->save();
         return response()->json([
             'pesan' => 'sukses'
