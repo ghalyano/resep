@@ -82,6 +82,7 @@ class UsersController extends Controller
     public function profil(Request $r)
     {
         $profil_saya = Users::where('username', $r->username)->with(['resep' => function ($query) {
+            $query->orderBy('waktu_post', 'desc');
             $query->with('kategori');
             $query->withCount(['komentar', 'like']);
         }])->first();
