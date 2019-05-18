@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Kategori;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Like;
 
 class ResepController extends Controller
 {
