@@ -14,4 +14,9 @@ class ListKoleksi extends Model
     {
         return $this->belongsTo('App\Users', 'username', 'username');
     }
+
+    public function koleksi()
+    {
+        return $this->hasMany('App\Koleksi', 'id_list', 'id_list');
+    }
 }
