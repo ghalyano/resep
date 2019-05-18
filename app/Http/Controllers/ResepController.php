@@ -78,7 +78,8 @@ class ResepController extends Controller
                     'nama' => $resep->user->nama,
                     'like' => $resep->like->count(),
                     'komentar' => $resep->komentar->count(),
-                    'is_liked' => $resep->isLiked($r->username)
+                    'is_liked' => $resep->isLiked($r->username),
+                    'is_bookmarked' => $resep->isBookmarked($r->username, $r->id)
                 ]
             ]
         );

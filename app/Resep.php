@@ -33,7 +33,7 @@ class Resep extends Model
 
     function koleksi()
     {
-        return $this->belongsToMany('App\Koleksi', 'koleksi', 'id_resep', 'id_resep');
+        return $this->belongsToMany('App\Koleksi', 'tbl_resep', 'id_resep', 'id_resep');
     }
 
     function bahan()
@@ -50,6 +50,16 @@ class Resep extends Model
     {
         $resep = Like::where(['username' => $username, 'id_resep' => $this->id_resep])->first();
         if ($resep)
+            return true;
+        return false;
+    }
+
+    function isBookmarked($username, $id_resep)
+    {
+        $bookmarked = ListKoleksi::where('username', $username)->whereHas('koleksi', function ($q) use ($id_resep) {
+            $q->where('id_resep', $id_resep);
+        })->first();
+        if ($bookmarked)
             return true;
         return false;
     }
