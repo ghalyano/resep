@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Resep extends Model
 {
-    protected $table="tbl_resep";
+    protected $table = "tbl_resep";
     protected $primaryKey = "id_resep";
     protected $dates = ['waktu_post'];
     public $timestamps = false;
 
-    function user() 
+    function user()
     {
         return $this->belongsTo('App\Users', 'username', 'username');
     }
@@ -21,37 +21,36 @@ class Resep extends Model
         return $this->belongsTo('App\Kategori', 'id_kategori', 'id_kategori');
     }
 
-    function like() 
+    function like()
     {
-    	return $this->hasMany('App\Like', 'id_resep', 'id_resep');
+        return $this->hasMany('App\Like', 'id_resep', 'id_resep');
     }
 
-    function komentar() 
+    function komentar()
     {
-    	return $this->hasMany('App\Komentar', 'id_resep', 'id_resep');
+        return $this->hasMany('App\Komentar', 'id_resep', 'id_resep');
     }
 
-    function koleksi() 
+    function koleksi()
     {
-    	return $this->belongsToMany('App\ListKoleksi', 'koleksi', 'id_list', 'id_resep');
+        return $this->belongsToMany('App\Koleksi', 'koleksi', 'id_resep', 'id_resep');
     }
 
-    function bahan() 
+    function bahan()
     {
-    	return $this->hasMany('App\Bahan', 'id_resep', 'id_resep');
+        return $this->hasMany('App\Bahan', 'id_resep', 'id_resep');
     }
 
-    function langkah() 
+    function langkah()
     {
-    	return $this->hasMany('App\Langkah', 'id_resep', 'id_resep');
+        return $this->hasMany('App\Langkah', 'id_resep', 'id_resep');
     }
 
     function isLiked($username)
     {
-        $resep = Like::where(['username'=>$username, 'id_resep'=>$this->id_resep])->first();
-        if($resep)
+        $resep = Like::where(['username' => $username, 'id_resep' => $this->id_resep])->first();
+        if ($resep)
             return true;
         return false;
     }
-    
 }
