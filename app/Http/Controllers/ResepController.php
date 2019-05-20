@@ -93,6 +93,9 @@ class ResepController extends Controller
 
     public function update_resep(Request $r)
     {
+        // Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
+
         //validasi input
         if (empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
             return 'judul, foto, bahan, dan langkah wajib diisi';
@@ -120,6 +123,7 @@ class ResepController extends Controller
 
     public function buat_resep(Request $r)
     {
+        date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
         //validasi input
         if (empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
             return response()->json([
@@ -128,16 +132,13 @@ class ResepController extends Controller
             ]);
         }
 
-        /* Log::info("PESAN DARI MOBILE>>" . join(", ", $r->bahan)); // log input ke laravel.log
-        exit(); */
-
         $resep = new Resep;
         $resep->judul = $r->judul;
         $resep->foto = $r->foto == null ? "" : $r->foto;
         // $resep->bahan = $r->bahan; // bahan di simpan di  table sendiri
         // $resep->langkah = $r->langkah; // langkah jg disimpan di table sendiri
         // todo handel upload foto jg belum
-        $resep->waktu_post = Carbon::now();
+        $resep->waktu_post = Carbon::now(); // todo handle time to be now
         $resep->id_kategori = $r->id_kategori;
         $resep->username = $r->username;
         $resep->link_video = $r->link_video == null ? "" : $r->link_video;
