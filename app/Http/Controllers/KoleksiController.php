@@ -63,11 +63,20 @@ class KoleksiController extends Controller
 
     public function hapus_dari_koleksi(Request $r)
     {
-        $koleksi = Koleksi::findOrFail($r->id_koleksi);
-        $koleksi->delete();
-        return response()->json([
-            'pesan' => 'sukses'
-        ]);
+        $id_resep = $r->id_resep;
+        $username = $r->username;
+        $bookmarked = Koleksi::where('id_resep', $id_resep)->whereHas('list_koleksi', function ($q) use ($username) {
+            $q->where('username', $username);
+        })->delete();
+        if ($bookmarked) {
+            return response()->json([
+                'pesan' => 'sukses'
+            ]);
+        } else {
+            return response()->json([
+                'pesan' => 'gagal'
+            ]);
+        }
     }
 
     public function tambah_koleksi(Request $r)
