@@ -56,11 +56,11 @@ class Resep extends Model
 
     function isBookmarked($username, $id_resep)
     {
-        $bookmarked = ListKoleksi::where('username', $username)->whereHas('koleksi', function ($q) use ($id_resep) {
-            $q->where('id_resep', $id_resep);
+        $bookmarked = Koleksi::where('id_resep', $id_resep)->whereHas('list_koleksi', function ($q) use ($username) {
+            $q->where('username', $username);
         })->first();
         if ($bookmarked)
-            return true;
+            return $bookmarked;
         return false;
     }
 }
