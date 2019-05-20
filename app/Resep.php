@@ -60,7 +60,17 @@ class Resep extends Model
             $q->where('username', $username);
         })->first();
         if ($bookmarked)
-            return $bookmarked;
+            return true;
+        return false;
+    }
+
+    function hapus_bookmark($username, $id_resep)
+    {
+        $bookmarked = Koleksi::where('id_resep', $id_resep)->whereHas('list_koleksi', function ($q) use ($username) {
+            $q->where('username', $username);
+        })->delete();
+        if ($bookmarked)
+            return true;
         return false;
     }
 }
