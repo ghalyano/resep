@@ -25,7 +25,7 @@ class KoleksiController extends Controller
             ]);
         } else {
             return response()->json([
-                'pesan' => 'token salah'
+                'pesan' => 'data user tidak ditemukan'
             ]);
         }
     }
@@ -67,11 +67,12 @@ class KoleksiController extends Controller
         $username = $r->username;
         $bookmarked = Koleksi::where('id_resep', $id_resep)->whereHas('list_koleksi', function ($q) use ($username) {
             $q->where('username', $username);
-        })->delete();
+        })->first();
         if ($bookmarked) {
+            $bookmarked->delete();
             return response()->json([
                 'pesan' => 'sukses',
-                'data' => $bookmarked
+                'data' => $bookmarked->list_koleksi
             ]);
         } else {
             return response()->json([
