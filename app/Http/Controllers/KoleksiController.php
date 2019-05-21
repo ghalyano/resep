@@ -70,7 +70,8 @@ class KoleksiController extends Controller
         })->delete();
         if ($bookmarked) {
             return response()->json([
-                'pesan' => 'sukses'
+                'pesan' => 'sukses',
+                'data' => $bookmarked
             ]);
         } else {
             return response()->json([
