@@ -94,12 +94,19 @@ class KoleksiController extends Controller
 
     public function tambah_ke_koleksi(Request $r)
     {
-        $koleksi = new Koleksi;
-        $koleksi->id_resep = $r->id_resep;
-        $koleksi->id_list = $r->id_list;
-        $koleksi->save();
+        $koleksi = Koleksi::where([
+            'id_resep' => $r->id_resep,
+            'id_list' => $r->id_list
+        ])->first();
+        if (is_null($koleksi)) {
+            $koleksi = new Koleksi;
+            $koleksi->id_resep = $r->id_resep;
+            $koleksi->id_list = $r->id_list;
+            $koleksi->save();
+        }
         return response()->json([
-            'pesan' => 'sukses'
+            'pesan' => 'sukses',
+            'data' => ListKoleksi::find($r->id_list)
         ]);
     }
 }
