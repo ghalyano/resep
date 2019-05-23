@@ -19,7 +19,7 @@ class ResepController extends Controller
     public function resep(Request $r)
     {
         // set format ke bhs indonesia
-        // Carbon::setLocale('id');
+        Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
 
         // todo limit later request
@@ -121,7 +121,7 @@ class ResepController extends Controller
 
     public function update_resep(Request $r)
     {
-        // Carbon::setLocale('id');
+        Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
 
         //validasi input
