@@ -16,4 +16,19 @@ class KategoriController extends Controller
     {
         return Kategori::all();
     }
+
+    public function isi_kategori(Request $r)
+    {
+        $isi_kategori = Kategori::find($r->id_kategori);
+        if (!is_null($isi_kategori)) {
+            return response()->json([
+                'pesan' => 'sukses',
+                'data' => $isi_kategori->resep
+            ]);
+        } else {
+            return response()->json([
+                'pesan' => 'gagal',
+            ]);
+        }
+    }
 }
