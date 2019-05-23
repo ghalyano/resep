@@ -19,7 +19,7 @@ class ResepController extends Controller
     public function resep(Request $r)
     {
         // set format ke bhs indonesia
-        Carbon::setLocale('id');
+        // Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
 
         // todo limit later request
@@ -87,8 +87,36 @@ class ResepController extends Controller
 
     public function cari_resep(Request $r)
     {
-        $resep = Resep::where('judul', 'LIKE', '%' . $r->query . '%')->get();
-        return $resep;
+        $resep = Resep::where('judul', 'LIKE', '%' . $r->cari . '%')->get();
+        if (!is_null($resep)) {
+            $hasil = [];
+            $sekarang = Carbon::now();
+            foreach ($resep as $data) {
+                $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ?
+                    $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
+                array_push($hasil, [
+                    'id_resep' => $data->id_resep,
+                    'judul' => $data->judul,
+                    'foto' => $data->foto,
+                    'bahan' => $data->bahan,
+                    'langkah' => $data->langkah,
+                    'waktu_post' => $waktu_post,
+                    'kategori' => $data->kategori->kategori,
+                    'username' => $data->username,
+                    'nama' => $data->user->nama,
+                    'like' => $data->like->count(),
+                    'komentar' => $data->komentar->count()
+                ]);
+            }
+            return response()->json([
+                'pesan' => 'sukses',
+                'data' => $hasil,
+                'jumlah' => $resep->count()
+            ]);
+        }
+        return response()->json([
+            'pesan' => 'gagal'
+        ]);
     }
 
     public function update_resep(Request $r)
