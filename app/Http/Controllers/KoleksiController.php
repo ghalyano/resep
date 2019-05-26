@@ -66,10 +66,14 @@ class KoleksiController extends Controller
 
     public function hapus_koleksi(Request $r)
     {
-        $koleksi = ListKoleksi::findOrFail($r->id_koleksi);
-        $koleksi->delete();
+        $koleksi = ListKoleksi::where('id_list', $r->id_list);
+        if ($koleksi->delete()) {
+            return response()->json([
+                'pesan' => 'sukses'
+            ]);
+        }
         return response()->json([
-            'pesan' => 'sukses'
+            'pesan' => 'gagal'
         ]);
     }
 
