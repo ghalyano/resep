@@ -49,7 +49,10 @@ class KoleksiController extends Controller
                 'komentar' => $resep->resep->komentar->count()
             ]);
         }
-        return $data;
+        return response()->json([
+            'pesan' => 'sukses',
+            'data' => $data
+        ]);
     }
 
     public function hapus_koleksi(Request $r)
