@@ -20,6 +20,9 @@ class KategoriController extends Controller
 
     public function isi_kategori(Request $r)
     {
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
+
         $isi_kategori = Kategori::find($r->id_kategori);
         $resep = $isi_kategori->resep;
         $hasil = [];
