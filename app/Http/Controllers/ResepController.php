@@ -142,11 +142,16 @@ class ResepController extends Controller
 
     public function delete_resep(Request $r)
     {
-        $resep = Resep::findOrFail($r->id_resep);
-        $resep->delete();
-        return response()->json([
-            'pesan' => 'sukses'
-        ]);
+        $resep = Resep::where('id_resep', $r->id_resep);
+        if ($resep->delete()) {
+            return response()->json([
+                'pesan' => 'sukses'
+            ]);
+        } else {
+            return response()->json([
+                'pesan' => 'gagal'
+            ]);
+        }
     }
 
     public function buat_resep(Request $r)
