@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Koleksi;
+use Carbon\Carbon;
 use App\ListKoleksi;
 use Illuminate\Http\Request;
 
@@ -32,16 +33,24 @@ class KoleksiController extends Controller
 
     public function koleksi_detail(Request $r)
     {
+        // set format ke bhs indonesia
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta'); //set defaul timezone 
+
         $koleksi_resep = Koleksi::where('id_list', $r->id_list)->get();
         $data = [];
+        $sekarang = Carbon::now();
+
         foreach ($koleksi_resep as $resep) {
+            $waktu_post = $resep->resep->waktu_post->diffInDays($sekarang) > 2 ?
+                $resep->resep->waktu_post->format('d M Y H:i') : $resep->resep->waktu_post->diffForHumans($sekarang);
             array_push($data, [
                 'id_resep' => $resep->resep->id_resep,
                 'judul' => $resep->resep->judul,
                 'foto' => $resep->resep->foto,
                 'bahan' => $resep->resep->bahan,
                 'langkah' => $resep->resep->langkah,
-                'waktu_post' => $resep->resep->waktu_post,
+                'waktu_post' => $waktu_post,
                 'kategori' => $resep->resep->kategori->kategori,
                 'username' => $resep->resep->username,
                 'nama' => $resep->resep->user->nama,
