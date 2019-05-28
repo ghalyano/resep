@@ -37,7 +37,12 @@ class KoleksiController extends Controller
         Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta'); //set defaul timezone 
 
-        $koleksi_resep = Koleksi::where('id_list', $r->id_list)->get();
+        $koleksi_resep = Koleksi::where('id_list', $r->id_list)->with([
+            'resep' => function ($q) {
+                $q->orderBy('judul', 'desc');
+            }
+        ])->get();
+
         $data = [];
         $sekarang = Carbon::now();
 

@@ -19,4 +19,9 @@ class ListKoleksi extends Model
     {
         return $this->hasMany('App\Koleksi', 'id_list', 'id_list');
     }
+
+    public function resep()
+    {
+        return Koleksi::where('id_list', $this->id_list)->get();
+    }
 }
