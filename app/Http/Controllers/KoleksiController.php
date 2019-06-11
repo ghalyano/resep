@@ -107,10 +107,15 @@ class KoleksiController extends Controller
         $koleksi = new ListKoleksi;
         $koleksi->nama_koleksi = $r->nama_koleksi;
         $koleksi->username = $r->username;
-        $koleksi->save();
-        return response()->json([
-            'pesan' => 'sukses'
-        ]);
+        if ($koleksi->save()) {
+            return response()->json([
+                'pesan' => 'sukses'
+            ]);
+        } else {
+            return response()->json([
+                'pesan' => 'gagal'
+            ]);
+        }
     }
 
     public function tambah_ke_koleksi(Request $r)
