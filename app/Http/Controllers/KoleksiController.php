@@ -127,6 +127,8 @@ class KoleksiController extends Controller
             ]);
         }
 
+        $koleksi->nama_koleksi = $r->nama_koleksi;
+
         return response()->json([
             'pesan' => 'sukses'
         ]);
