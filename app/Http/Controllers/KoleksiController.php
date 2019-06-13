@@ -118,6 +118,20 @@ class KoleksiController extends Controller
         }
     }
 
+    public function update_koleksi(Request $r)
+    {
+        $koleksi = Koleksi::find($r->id);
+        if (is_null($koleksi)) {
+            return response()->json([
+                'pesan' => 'gagal'
+            ]);
+        }
+
+        return response()->json([
+            'pesan' => 'sukses'
+        ]);
+    }
+
     public function tambah_ke_koleksi(Request $r)
     {
         $koleksi = Koleksi::where([

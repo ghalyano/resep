@@ -31,6 +31,7 @@ Route::post('koleksi/detail', 'KoleksiController@koleksi_detail');
 Route::post('hapus_koleksi', 'KoleksiController@hapus_koleksi');
 Route::post('hapus_dari_koleksi', 'KoleksiController@hapus_dari_koleksi');
 Route::post('tambah_koleksi', 'KoleksiController@tambah_koleksi');
+Route::post('update_koleksi', 'KoleksiController@update_koleksi');
 Route::post('tambah_ke_koleksi', 'KoleksiController@tambah_ke_koleksi');
 Route::post('profil', 'UsersController@profil');
 Route::post('ganti_password', 'UsersController@ganti_password');
