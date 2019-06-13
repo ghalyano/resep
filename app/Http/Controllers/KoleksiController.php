@@ -120,7 +120,7 @@ class KoleksiController extends Controller
 
     public function update_koleksi(Request $r)
     {
-        $koleksi = Koleksi::find($r->id);
+        $koleksi = ListKoleksi::find($r->id);
         if (is_null($koleksi)) {
             return response()->json([
                 'pesan' => 'gagal'
@@ -128,6 +128,7 @@ class KoleksiController extends Controller
         }
 
         $koleksi->nama_koleksi = $r->nama_koleksi;
+        $koleksi->save();
 
         return response()->json([
             'pesan' => 'sukses'
