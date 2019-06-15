@@ -81,7 +81,8 @@ class ResepController extends Controller
                     'like' => $resep->like->count(),
                     'komentar' => $resep->komentar->count(),
                     'is_liked' => $resep->isLiked($r->username),
-                    'is_bookmarked' => $resep->isBookmarked($r->username, $r->id)
+                    'is_bookmarked' => $resep->isBookmarked($r->username, $r->id),
+                    'link_video' => $resep->link_video
                 ]
             ]
         );
