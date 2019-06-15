@@ -8,6 +8,8 @@ use App\Kategori;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Like;
+use App\Bahan;
+use App\Langkah;
 
 class ResepController extends Controller
 {
@@ -176,6 +178,22 @@ class ResepController extends Controller
         $resep->username = $r->username;
         $resep->link_video = $r->link_video == null ? "" : $r->link_video;
         $resep->save();
+
+        foreach($r->bahan as $bhn) {
+            $tbl_bahan = new Bahan;
+            $tbl_bahan->bahan = $bhn;
+            $tbl_bahan->id_resep = $resep->id_resep;
+            $tbl_bahan->save();
+        }
+
+        foreach($r->langkah as $lgk) {
+            $tbl_langkah = new Langkah;
+            $tbl_langkah->langkah = $lgk;
+            $tbl_langkah->id_resep = $resep->id_resep;
+            $tbl_langkah->foto = ""; // todo nanti diganti jika bisa upload foto
+            $tbl_langkah->save();
+        }
+
         return response()->json([
             'pesan' => 'sukses'
         ]);
