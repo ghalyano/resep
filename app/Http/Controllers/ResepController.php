@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use App\Like;
 use App\Bahan;
 use App\Langkah;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ResepController extends Controller
 {
@@ -28,14 +30,18 @@ class ResepController extends Controller
         $resep = Resep::orderBy('waktu_post', 'desc')->get();
         $hasil = [];
         $sekarang = Carbon::now();
-
         foreach ($resep as $data) {
             $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ?
                 $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
+            if ($data->foto != null) {
+                $foto = asset('storage') . '/' . $data->foto;
+            } else {
+                $foto = '';
+            }
             array_push($hasil, [
                 'id_resep' => $data->id_resep,
                 'judul' => $data->judul,
-                'foto' => $data->foto,
+                'foto' => $foto,
                 'bahan' => $data->bahan,
                 'langkah' => $data->langkah,
                 'waktu_post' => $waktu_post,
@@ -63,13 +69,19 @@ class ResepController extends Controller
         // set format ke bhs indonesia
         \Carbon\Carbon::setLocale('id');
 
+        if ($resep->foto != null) {
+            $foto = asset('storage') . '/' . $resep->foto;
+        } else {
+            $foto = '';
+        }
+
         return response()->json(
             [
                 'pesan' => 'sukses',
                 'data' => [
                     'id_resep' => $resep->id_resep,
                     'judul' => $resep->judul,
-                    'foto' => $resep->foto,
+                    'foto' => $foto,
                     'bahan' => $resep->bahan,
                     'langkah' => $resep->langkah,
                     'list_komentar' => $resep->komentar,
@@ -97,10 +109,15 @@ class ResepController extends Controller
             foreach ($resep as $data) {
                 $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ?
                     $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
+                if ($data->foto != null) {
+                    $foto = asset('storage') . '/' . $data->foto;
+                } else {
+                    $foto = '';
+                }
                 array_push($hasil, [
                     'id_resep' => $data->id_resep,
                     'judul' => $data->judul,
-                    'foto' => $data->foto,
+                    'foto' => $foto,
                     'bahan' => $data->bahan,
                     'langkah' => $data->langkah,
                     'waktu_post' => $waktu_post,
@@ -168,26 +185,30 @@ class ResepController extends Controller
             ]);
         }
 
+        // * handle upload gambar dulu
+        $decoded_img = base64_decode($r->foto);
+        // $uploaded_to  = Storage::disk('public')->put('covers', $decoded_img);
+        $store_path = storage_path('app' . DIRECTORY_SEPARATOR  . 'public' . DIRECTORY_SEPARATOR  . 'covers' . DIRECTORY_SEPARATOR);
+        $name = Str::random() . ".jpg";
+        $file_name = $store_path . $name;
+        file_put_contents($file_name, $decoded_img);
         $resep = new Resep;
         $resep->judul = $r->judul;
-        $resep->foto = $r->foto == null ? "" : $r->foto;
-        // $resep->bahan = $r->bahan; // bahan di simpan di  table sendiri
-        // $resep->langkah = $r->langkah; // langkah jg disimpan di table sendiri
-        // todo handel upload foto jg belum
+        $resep->foto = 'covers/' . $name;
         $resep->waktu_post = Carbon::now(); // todo handle time to be now
         $resep->id_kategori = $r->id_kategori;
         $resep->username = $r->username;
         $resep->link_video = $r->link_video == null ? "" : $r->link_video;
         $resep->save();
 
-        foreach($r->bahan as $bhn) {
+        foreach ($r->bahan as $bhn) {
             $tbl_bahan = new Bahan;
             $tbl_bahan->bahan = $bhn;
             $tbl_bahan->id_resep = $resep->id_resep;
             $tbl_bahan->save();
         }
 
-        foreach($r->langkah as $lgk) {
+        foreach ($r->langkah as $lgk) {
             $tbl_langkah = new Langkah;
             $tbl_langkah->langkah = $lgk;
             $tbl_langkah->id_resep = $resep->id_resep;
