@@ -201,16 +201,16 @@ class ResepController extends Controller
         $resep->link_video = $r->link_video == null ? "" : $r->link_video;
         $resep->save();
 
-        foreach ($r->bahan as $bhn) {
+        for ($i = 0; $i < count($r->bahan); $i++) {
             $tbl_bahan = new Bahan;
-            $tbl_bahan->bahan = $bhn;
+            $tbl_bahan->bahan = $r->bahan[$i];
             $tbl_bahan->id_resep = $resep->id_resep;
             $tbl_bahan->save();
         }
 
-        foreach ($r->langkah as $lgk) {
+        for ($i = 0; $i < count($r->langkah); $i++) {
             $tbl_langkah = new Langkah;
-            $tbl_langkah->langkah = $lgk;
+            $tbl_langkah->langkah = $r->langkah[$i];
             $tbl_langkah->id_resep = $resep->id_resep;
             $tbl_langkah->foto = ""; // todo nanti diganti jika bisa upload foto
             $tbl_langkah->save();
