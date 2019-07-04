@@ -96,7 +96,7 @@ class UsersController extends Controller
 
     public function update_profil(Request $r)
     {
-        $user = Users::where('token_login', $r->token_login)->first();
+        $user = Users::where('username', $r->username)->first();
         // $user->username=$r->username;
         $user->nama = $r->nama;
         $user->email = $r->email;
@@ -114,7 +114,7 @@ class UsersController extends Controller
 
     public function ganti_password(Request $r)
     {
-        $user = Users::where('token_login', $r->token_login)->first();
+        $user = Users::where('username', $r->username)->first();
         $pass_sama = Hash::check($r->password_lama, $user->password);
         if ($pass_sama) {
             $user->password = Hash::make($r->password_baru);
@@ -123,5 +123,37 @@ class UsersController extends Controller
         } else {
             return "password berbeda";
         }
+    }
+
+    public function daftar(Request $r)
+    {
+        //validasi
+        $cek_email = Users::where('email', $r->email)->first();
+        if ($cek_email != null) {
+            return response()->json([
+                'pesan' => 'gagal',
+                'status' => 'email sudah digunakan'
+            ]);
+        }
+        $cek_user = Users::find($r->username);
+        if ($cek_user != null) {
+            return response()->json([
+                'pesan' => 'gagal',
+                'status' => 'username sudah digunakan'
+            ]);
+        }
+
+        $user_baru = new Users;
+        $user_baru->email = $r->email;
+        $user_baru->username = $r->username;
+        $user_baru->nama = $r->nama_lengkap;
+        $user_baru->password = Hash::make($r->password);
+        $user_baru->save();
+
+        $user_baru = Users::find($user_baru->username);
+        return response()->json([
+            'pesan' => 'sukses',
+            'data' => $user_baru
+        ]);
     }
 }

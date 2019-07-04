@@ -43,3 +43,4 @@ Route::post('delete_komentar', 'KomentarController@delete_komentar');
 Route::post('like', 'LikeController@like');
 Route::get('kategori', 'KategoriController@kategori');
 Route::post('isi_kategori', 'KategoriController@isi_kategori');
+Route::post('daftar', 'UsersController@daftar');
