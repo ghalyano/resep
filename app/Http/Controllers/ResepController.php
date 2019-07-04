@@ -20,7 +20,7 @@ class ResepController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function resep(Request $r)
+    public function resep()
     {
         // set format ke bhs indonesia
         Carbon::setLocale('id');
@@ -34,7 +34,7 @@ class ResepController extends Controller
             $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ?
                 $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
             if ($data->foto != null) {
-                $foto = asset('storage') . '/' . $data->foto;
+                $foto = $data->foto;
             } else {
                 $foto = '';
             }
@@ -70,7 +70,7 @@ class ResepController extends Controller
         \Carbon\Carbon::setLocale('id');
 
         if ($resep->foto != null) {
-            $foto = asset('storage') . '/' . $resep->foto;
+            $foto = $resep->foto;
         } else {
             $foto = '';
         }
@@ -110,7 +110,7 @@ class ResepController extends Controller
                 $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ?
                     $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
                 if ($data->foto != null) {
-                    $foto = asset('storage') . '/' . $data->foto;
+                    $foto = $data->foto;
                 } else {
                     $foto = '';
                 }
