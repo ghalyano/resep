@@ -44,3 +44,4 @@ Route::post('like', 'LikeController@like');
 Route::get('kategori', 'KategoriController@kategori');
 Route::post('isi_kategori', 'KategoriController@isi_kategori');
 Route::post('daftar', 'UsersController@daftar');
+Route::post('upload_profil', 'UsersController@upload_profil');

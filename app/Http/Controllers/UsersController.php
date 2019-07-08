@@ -112,6 +112,21 @@ class UsersController extends Controller
         }
     }
 
+    public function upload_profil(Request $r)
+    {
+        $decoded_img = base64_decode($r->foto);
+        $store_path = storage_path('app' . DIRECTORY_SEPARATOR  . 'public' . DIRECTORY_SEPARATOR  . 'profil' . DIRECTORY_SEPARATOR);
+        $name = $r->username . ".jpg";
+        $file_name = $store_path . $name;
+        file_put_contents($file_name, $decoded_img);
+        $user = Users::findOrFail($r->username);
+        $user->foto = 'profil/' . $name;
+        $user->save();
+        return response()->json([
+            'pesan' => 'sukses'
+        ]);
+    }
+
     public function ganti_password(Request $r)
     {
         $user = Users::where('username', $r->username)->first();

@@ -27,7 +27,7 @@ class ResepController extends Controller
         date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
 
         // todo limit later request
-        $resep = Resep::orderBy('waktu_post', 'desc')->get();
+        $resep = Resep::orderBy('waktu_post', 'desc')->take(10)->get();
         $hasil = [];
         $sekarang = Carbon::now();
         foreach ($resep as $data) {
