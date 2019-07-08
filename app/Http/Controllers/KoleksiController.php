@@ -22,7 +22,8 @@ class KoleksiController extends Controller
         if (!is_null($user)) {
             return response()->json([
                 'pesan' => 'sukses',
-                'data' => ListKoleksi::where('username', $user->username)->get()
+                'data' => ListKoleksi::where('username', $user->username)->get(),
+                // 'foto' => $liskoleksi->first()->koleksi->first()->resep->foto
             ]);
         } else {
             return response()->json([

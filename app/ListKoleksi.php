@@ -9,6 +9,8 @@ class ListKoleksi extends Model
     protected $table = "list_koleksi";
     protected $primaryKey = "id_list";
     public $timestamps = false;
+    protected $appends = ['foto'];
+    protected $hidden = ['koleksi'];
 
     public function username()
     {
@@ -20,8 +22,8 @@ class ListKoleksi extends Model
         return $this->hasMany('App\Koleksi', 'id_list', 'id_list');
     }
 
-    public function resep()
+    public function getFotoAttribute()
     {
-        return Koleksi::where('id_list', $this->id_list)->get();
+        return $this->koleksi->first()->resep->foto;
     }
 }
