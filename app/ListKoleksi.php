@@ -24,6 +24,9 @@ class ListKoleksi extends Model
 
     public function getFotoAttribute()
     {
+        if ($this->koleksi->first() == null) {
+            return "";
+        }
         return $this->koleksi->first()->resep->foto;
     }
 }
