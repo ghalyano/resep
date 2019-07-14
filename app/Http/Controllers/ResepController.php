@@ -178,7 +178,7 @@ class ResepController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
         //validasi input
-        if (empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
+        if (empty($r->judul) or empty($r->foto) or empty($r->bahan) or empty($r->langkah)) {
             return response()->json([
                 'pesan' => 'gagal',
                 'status' => 'Judul, Foto, Bahan dan Langkah wajib diisi'
