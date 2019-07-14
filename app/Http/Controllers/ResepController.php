@@ -185,6 +185,10 @@ class ResepController extends Controller
             ]);
         }
 
+
+        $resep = new Resep;
+        $resep->judul = $r->judul;
+
         // * handle upload gambar dulu
         $decoded_img = base64_decode($r->foto);
         // $uploaded_to  = Storage::disk('public')->put('covers', $decoded_img);
@@ -192,10 +196,9 @@ class ResepController extends Controller
         $name = Str::random() . ".jpg";
         $file_name = $store_path . $name;
         file_put_contents($file_name, $decoded_img);
-        $resep = new Resep;
-        $resep->judul = $r->judul;
         $resep->foto = 'covers/' . $name;
-        $resep->waktu_post = Carbon::now(); // todo handle time to be now
+
+        $resep->waktu_post = Carbon::now();
         $resep->id_kategori = $r->id_kategori;
         $resep->username = $r->username;
         $resep->link_video = $r->link_video == null ? "" : $r->link_video;
