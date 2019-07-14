@@ -185,7 +185,6 @@ class ResepController extends Controller
             ]);
         }
 
-
         $resep = new Resep;
         $resep->judul = $r->judul;
 
