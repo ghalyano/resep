@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use Hash;
 use App\Users;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Hash;
-use Auth;
 
 class UsersController extends Controller
 {
@@ -114,9 +115,12 @@ class UsersController extends Controller
 
     public function upload_profil(Request $r)
     {
+        $user = Users::find($r->username);
+        Storage::disk('public')->delete($user->foto);
+
         $decoded_img = base64_decode($r->foto);
         $store_path = storage_path('app' . DIRECTORY_SEPARATOR  . 'public' . DIRECTORY_SEPARATOR  . 'profil' . DIRECTORY_SEPARATOR);
-        $name = $r->username . ".jpg";
+        $name = str_random() . ".jpg";
         $file_name = $store_path . $name;
         file_put_contents($file_name, $decoded_img);
         $user = Users::findOrFail($r->username);
@@ -125,6 +129,17 @@ class UsersController extends Controller
         return response()->json([
             'pesan' => 'sukses'
         ]);
+    }
+
+    private function generate_name()
+    {
+        $name = str_random() . ".jpg";
+        if (Storage::disk('public')->exists('profil/' . $name)) {
+            $name = str_random() . ".jpg";
+        } else {
+            $name = generate_name();
+        }
+        return $name;
     }
 
     public function ganti_password(Request $r)
