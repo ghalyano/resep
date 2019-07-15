@@ -87,6 +87,7 @@ class ResepController extends Controller
                     'list_komentar' => $resep->komentar,
                     'waktu_post' => $resep->waktu_post->format('d M Y H:i'),
                     'waktu_post_baca' => $resep->waktu_post->diffForHumans(),
+                    'id_kategori' => $resep->id_kategori,
                     'kategori' => $resep->kategori->kategori,
                     'username' => $resep->username,
                     'nama' => $resep->user->nama,
