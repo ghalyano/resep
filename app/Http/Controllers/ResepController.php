@@ -95,7 +95,7 @@ class ResepController extends Controller
                     'komentar' => $resep->komentar->count(),
                     'is_liked' => $resep->isLiked($r->username),
                     'is_bookmarked' => $resep->isBookmarked($r->username, $r->id),
-                    'link_video' => $resep->link_video
+                    'link_video' => is_null($resep->link_video) ? '' : $resep->link_video
                 ]
             ]
         );
@@ -149,16 +149,88 @@ class ResepController extends Controller
         if (empty($r->judul) && empty($r->foto) && empty($r->bahan) && empty($r->langkah)) {
             return 'judul, foto, bahan, dan langkah wajib diisi';
         }
-        $resep = Resep::findOrFail($r->id_resep);
+
+        $resep = Resep::findOrFail($r->id);
         $resep->judul = $r->judul;
-        $resep->foto = $r->foto;
-        $resep->bahan = $r->bahan;
-        $resep->langkah = $r->langkah;
-        $resep->waktu_post = $r->waktu_post;
+
+        // * handle upload gambar dulu
+        if (!is_null($r->foto)) {
+            if (!is_null($resep->foto) and $resep->foto == '') {
+                Storage::disk('public')->delete($resep->foto);
+            }
+            $decoded_img = base64_decode($r->foto);
+            // $uploaded_to  = Storage::disk('public')->put('covers', $decoded_img);
+            $store_path = storage_path('app' . DIRECTORY_SEPARATOR  . 'public' . DIRECTORY_SEPARATOR  . 'covers' . DIRECTORY_SEPARATOR);
+            $name = $this->generate_name();
+            $file_name = $store_path . $name;
+            file_put_contents($file_name, $decoded_img);
+            $resep->foto = 'covers/' . $name;
+        }
+
+        for ($i = 0; $i < count($r->langkah); $i++) {
+            $data = explode('-_-*', $r->langkah[$i]);
+            if ($data[0] != 0) {
+                $langkah = Langkah::find($data[0]);
+                $langkah->langkah = $data[1];
+                $langkah->foto = "";
+                $langkah->id_resep = $r->id;
+                $langkah->save();
+            } else {
+                $langkah = new Langkah;
+                $langkah->langkah = $data[1];
+                $langkah->foto = "";
+                $langkah->id_resep = $r->id;
+                $langkah->save();
+            }
+        }
+
+        for ($i = 0; $i < count($r->bahan); $i++) {
+            $data = explode('-_-*', $r->bahan[$i]);
+            if ($data[0] != 0) {
+                $bahan = Bahan::find($data[0]);
+                $bahan->bahan = $data[1];
+                $bahan->id_resep = $r->id;
+                $bahan->save();
+            } else {
+                $bahan = new Bahan;
+                $bahan->bahan = $data[1];
+                $bahan->id_resep = $r->id;
+                $bahan->save();
+            }
+        }
+
+        if (!is_null($r->hapus_bahan)) {
+            foreach ($r->hapus_bahan as $val) {
+                if ($val != 0) {
+                    $bahan = Bahan::find($val);
+                    $bahan->delete();
+                }
+            }
+        }
+
+        if (!is_null($r->hapus_langkah)) {
+            foreach ($r->hapus_langkah as $val) {
+                if ($val != 0) {
+                    $langkah = Langkah::find($val);
+                    $langkah->delete();
+                }
+            }
+        }
+
         $resep->id_kategori = $r->id_kategori;
-        $resep->username = $r->username;
-        $resep->link_video = $r->link_video;
+        $resep->link_video = is_null($r->link_video) ? "" : $r->link_video;
+        // info($r);
         $resep->save();
+    }
+
+    private function generate_name()
+    {
+        $nama = Str::random() . ".jpg";
+        while (Storage::disk('public')->exists('covers/' . $nama)) {
+            $nama = Str::random() . ".jpg";
+        }
+
+        return $nama;
     }
 
     public function delete_resep(Request $r)
