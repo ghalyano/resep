@@ -9,6 +9,7 @@ class Resep extends Model
     protected $table = "tbl_resep";
     protected $primaryKey = "id_resep";
     protected $dates = ['waktu_post'];
+    // protected $appends = ['nama'];
     public $timestamps = false;
 
     function user()
@@ -72,5 +73,20 @@ class Resep extends Model
         if ($bookmarked)
             return true;
         return false;
+    }
+
+    public function getLikeCountAttribute()
+    {
+        return Like::where('id_resep', $this->id_resep)->count();
+    }
+
+    public function getKomentarCountAttribute()
+    {
+        return Komentar::where('id_resep', $this->id_resep)->count();
+    }
+
+    public function getNamaAttribute()
+    {
+        return Users::find($this->username)->nama;
     }
 }
