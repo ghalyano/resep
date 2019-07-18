@@ -3,13 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Resep extends Model
 {
     protected $table = "tbl_resep";
     protected $primaryKey = "id_resep";
     protected $dates = ['waktu_post'];
-    // protected $appends = ['nama'];
+    protected $appends = ['waktu_post_resep'];
     public $timestamps = false;
 
     function user()
@@ -75,18 +76,11 @@ class Resep extends Model
         return false;
     }
 
-    public function getLikeCountAttribute()
+    public function getWaktuPostResepAttribute()
     {
-        return Like::where('id_resep', $this->id_resep)->count();
-    }
-
-    public function getKomentarCountAttribute()
-    {
-        return Komentar::where('id_resep', $this->id_resep)->count();
-    }
-
-    public function getNamaAttribute()
-    {
-        return Users::find($this->username)->nama;
+        $sekarang = Carbon::now();
+        $waktu_post = $this->waktu_post->diffInDays($sekarang) > 2 ?
+            $this->waktu_post->format('d M Y H:i') : $this->waktu_post->diffForHumans($sekarang);
+        return $waktu_post;
     }
 }

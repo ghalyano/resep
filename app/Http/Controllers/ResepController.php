@@ -20,10 +20,16 @@ class ResepController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function resepa()
+    public function resep_terpopuler()
     {
-        $resep = Resep::first();
-        return response()->json($resep);
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
+        $resep2 = Resep::with(['bahan', 'langkah', 'kategori:id_kategori,kategori', 'user:username,nama'])
+            ->withCount(['like', 'komentar'])
+            ->orderBy('like_count', 'desc')
+            ->take(10)
+            ->get();
+        return response()->json($resep2);
     }
     public function resep()
     {
@@ -32,63 +38,13 @@ class ResepController extends Controller
         date_default_timezone_set('Asia/Jakarta'); //set defaul timezone ke indonesia
 
         // todo limit later request
-        $resep = Resep::with(['bahan', 'langkah', 'kategori', 'user'])
+        $resep = Resep::with(['bahan', 'langkah', 'kategori:id_kategori,kategori', 'user:username,nama'])
             ->withCount(['like', 'komentar'])
             ->orderBy('waktu_post', 'desc')
             ->take(10)
             ->get();
-        $hasil = [];
-        $sekarang = Carbon::now();
+
         return response()->json($resep);
-        foreach ($resep as $data) {
-            $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ?
-                $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
-            if ($data->foto != null) {
-                $foto = $data->foto;
-            } else {
-                $foto = '';
-            }
-            array_push($hasil, [
-                'id_resep' => $data->id_resep,
-                'judul' => $data->judul,
-                'foto' => $foto,
-                'bahan' => $data->bahan,
-                'langkah' => $data->langkah,
-                'waktu_post' => $waktu_post,
-                'kategori' => $data->kategori->kategori,
-                'username' => $data->username,
-                'nama' => $data->user->nama,
-                'like' => $data->like->count(),
-                'komentar' => $data->komentar->count()
-            ]);
-        }
-
-        /* $resep2 = Resep::withCount('like')->orderBy('like_count', 'desc')->take(10)->get();
-        $hasil2 = [];
-        foreach ($resep2 as $data) {
-            $waktu_post = $data->waktu_post->diffInDays($sekarang) > 2 ?
-                $data->waktu_post->format('d M Y H:i') : $data->waktu_post->diffForHumans($sekarang);
-            if ($data->foto != null) {
-                $foto = $data->foto;
-            } else {
-                $foto = '';
-            }
-            array_push($hasil2, [
-                'id_resep' => $data->id_resep,
-                'judul' => $data->judul,
-                'foto' => $foto,
-                'bahan' => $data->bahan,
-                'langkah' => $data->langkah,
-                'waktu_post' => $waktu_post,
-                'kategori' => $data->kategori->kategori,
-                'username' => $data->username,
-                'nama' => $data->user->nama,
-                'like' => $data->like->count(),
-                'komentar' => $data->komentar->count()
-            ]);
-        } */
-
-        return response()->json($hasil);
     }
 
     public function detail_resep(Request $r)

@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'UsersController@login');
 Route::post('register', 'UsersController@register');
 Route::get('resep', 'ResepController@resep');
+Route::get('resep_terpopuler', 'ResepController@resep_terpopuler');
 Route::post('detail_resep', 'ResepController@detail_resep');
 Route::post('cari_resep', 'ResepController@cari_resep');
 Route::post('update_resep', 'ResepController@update_resep');
