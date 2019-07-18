@@ -86,7 +86,8 @@ class ResepController extends Controller
                     'komentar' => $resep->komentar->count(),
                     'is_liked' => $resep->isLiked($r->username),
                     'is_bookmarked' => $resep->isBookmarked($r->username, $r->id),
-                    'link_video' => is_null($resep->link_video) ? '' : $resep->link_video
+                    'link_video' => is_null($resep->link_video) ? '' : $resep->link_video,
+                    'tips' => $resep->tips
                 ]
             ]
         );
@@ -208,6 +209,7 @@ class ResepController extends Controller
             }
         }
 
+        $resep->tips = $r->tips;
         $resep->id_kategori = $r->id_kategori;
         $resep->link_video = is_null($r->link_video) ? "" : $r->link_video;
         // info($r);
@@ -262,6 +264,7 @@ class ResepController extends Controller
         $resep->foto = 'covers/' . $name;
 
         $resep->waktu_post = Carbon::now();
+        $resep->tips = $r->tips;
         $resep->id_kategori = $r->id_kategori;
         $resep->username = $r->username;
         $resep->link_video = $r->link_video == null ? "" : $r->link_video;
