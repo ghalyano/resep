@@ -87,7 +87,7 @@ class ResepController extends Controller
                     'is_liked' => $resep->isLiked($r->username),
                     'is_bookmarked' => $resep->isBookmarked($r->username, $r->id),
                     'link_video' => is_null($resep->link_video) ? '' : $resep->link_video,
-                    'tips' => $resep->tips
+                    'tips' => is_null($resep->tips) ? '' : $resep->tips
                 ]
             ]
         );
